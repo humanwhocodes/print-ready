@@ -1,0 +1,64 @@
+{
+  "name": "@humanwhocodes/print-ready",
+  "version": "0.0.0",
+  "description": "Convert HTML to PDF",
+  "type": "module",
+  "main": "dist/print-ready.cjs",
+  "module": "dist/print-ready.js",
+  "types": "dist/print-ready.d.ts",
+  "exports": {
+    "require": "./dist/print-ready.cjs",
+    "import": "./dist/print-ready.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ]
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/nzakas"
+  },
+  "scripts": {
+    "build": "rollup -c && tsc",
+    "prepare": "npm run build",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/",
+    "pretest": "npm run build",
+    "test": "mocha tests/print-ready.test.js --timeout 5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humanwhocodes/print-ready.git"
+  },
+  "keywords": [
+    "puppeteer",
+    "pdf",
+    "pagedjs"
+  ],
+  "author": "Nicholas C. Zaks",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/puppeteer": "^5.4.4",
+    "chai": "^4.3.4",
+    "eslint": "^7.32.0",
+    "lint-staged": "^10.4.0",
+    "mocha": "^9.0.3",
+    "puppeteer": "^10.2.0",
+    "rollup": "^1.20.3",
+    "typescript": "^4.0.3",
+    "yorkie": "^2.0.0"
+  },
+  "dependencies": {
+    "pagedjs": "^0.2.0"
+  }
+}

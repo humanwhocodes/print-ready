@@ -1,0 +1,10 @@
+{
+    "include": [
+        "dist/data-extractor.js"
+    ],
+    "compilerOptions": {
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "allowJs": true
+    }
+}
