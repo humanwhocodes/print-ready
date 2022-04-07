@@ -46,7 +46,7 @@
     "pagedjs"
   ],
   "author": "Nicholas C. Zaks",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "devDependencies": {
     "@types/puppeteer": "^5.4.4",
     "chai": "^4.3.4",
@@ -59,6 +59,7 @@
     "yorkie": "^2.0.0"
   },
   "dependencies": {
-    "pagedjs": "^0.2.0"
+    "pagedjs": "^0.2.0",
+    "pdf-lib": "^1.17.1"
   }
 }

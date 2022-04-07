@@ -3,6 +3,8 @@
  * @author Nicholas C. Zakas
  */
 
+/*global window, document, CSS*/
+
 //-----------------------------------------------------------------------------
 // Imports
 //-----------------------------------------------------------------------------
@@ -71,7 +73,7 @@ function createPdfOptions(options = {}) {
  */
 function extractMeta(page) {
     return page.evaluate(() => {
-        const result = {
+        const meta = {
             title: document.title,
             lang: document.querySelector("html").lang
         };
@@ -79,10 +81,25 @@ function extractMeta(page) {
         let metaTags = document.querySelectorAll("meta");
         for (const metaTag of metaTags) {
             if (metaTag.name) {
-                result[metaTag.name] = metaTag.content;
+                meta[metaTag.name] = metaTag.content;
             }
         }
-        return result;
+
+        // normalize keywords into an array
+        if (typeof meta.keywords === "string") {
+            meta.keywords = meta.keywords.split(/\s*,\s*/g);
+        } else {
+            meta.keywords = [];
+        }
+
+        // add dates
+        const now = new Date().toISOString();
+        meta.creationDate = now;
+        meta.modDate = now;
+        meta.metadataDate = now;
+
+
+        return meta;
     });
 }
 
@@ -122,15 +139,15 @@ export class Printer extends EventEmitter {
             "size",
             "pdfstart",
             "pdfend"
-        ]
-    };
+        ];
+    }
 
     /**
      * 
      * @param {*} filePath 
      * @returns 
      */
-    async printFileToPdf(filePath, options) {
+    async printFileToPdf(filePath) {
         const fullFilePath = path.resolve(this.cwd, filePath);
         const fileUrl = pathToFileURL(fullFilePath);
         
@@ -141,7 +158,7 @@ export class Printer extends EventEmitter {
      * 
      * @param {string} url  
      */
-    async printUrlToPdf(url, options) {
+    async printUrlToPdf(url) {
 
         const browser = await puppeteer.launch(
             createPuppeteerOptions()
@@ -152,7 +169,7 @@ export class Printer extends EventEmitter {
         // navigate to the page
         await page.goto(url, {
             waitUntil: "networkidle0"
-        });;
+        });
         
         this.emit("navigationend", { url });
         
