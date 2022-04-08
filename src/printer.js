@@ -123,7 +123,7 @@ export class Printer extends EventEmitter {
      */
     async printFileToPdf(filePath) {
         const fullFilePath = path.resolve(this.cwd, filePath);
-        const fileUrl = pathToFileURL(fullFilePath);
+        const fileUrl = pathToFileURL(fullFilePath).href;
         
         return this.printUrlToPdf(fileUrl);
     }
@@ -161,15 +161,16 @@ export class Printer extends EventEmitter {
          * difficult to debug.
          */
         await page.exposeFunction("onSize", size => {
-            this.emit("size", { size });
+            this.emit("size", { url, size });
         });
 
         await page.exposeFunction("onPage", (page) => {
-            this.emit("page", { page });
+            this.emit("page", { url, page });
         });
 
         await page.exposeFunction("onRendered", (msg, operation) => {
             this.emit("renderend", {
+                url,
                 message: msg,
                 operation
             });
@@ -181,7 +182,7 @@ export class Printer extends EventEmitter {
         * so in the next step it can be converted to a PDF.
         */
 
-        this.emit("renderstart");
+        this.emit("renderstart", { url });
         
         await page.evaluate(async () => {
             let done;
@@ -243,9 +244,9 @@ export class Printer extends EventEmitter {
         await page.waitForSelector(".pagedjs_pages");
 
         // generate the PDF
-        this.emit("pdfstart");
+        this.emit("pdfstart", { url });
         const blob = await page.pdf(createPdfOptions());
-        this.emit("pdfend");
+        this.emit("pdfend", { url });
 
         // cleanup
         await page.close();
