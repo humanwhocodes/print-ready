@@ -34,12 +34,6 @@ function setupDebugMessages(printer) {
 
 const argv = yargs(process.argv.slice(2))
     .scriptName("print-ready")
-
-// disable automatic console output
-// .help(false)
-// .version(false)
-
-    // options for the command line
     .options({
         o: {
             type: "string",
@@ -62,7 +56,6 @@ const argv = yargs(process.argv.slice(2))
     })
     .usage("$0 [options] filename")
     .argv;
-
 
 //-----------------------------------------------------------------------------
 // Main
