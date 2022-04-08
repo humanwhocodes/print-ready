@@ -3,7 +3,7 @@
  * @author Nicholas C. Zakas
  */
 
-/*global window, document, CSS*/
+/*global window, CSS*/
 
 //-----------------------------------------------------------------------------
 // Imports
@@ -11,10 +11,22 @@
 
 import puppeteer from "puppeteer";
 import path from "node:path";
-import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import EventEmitter from "node:events";
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("puppeteer").PDFOptions} PuppeteerPDFOptions */
+/** @typedef {import("puppeteer").LaunchOptions} PuppeteerLaunchOptions */
+/**
+ * @typedef {Object} PDFOptions
+ * @property {"portrait"|"landscape"} [orientation] The page orientation.
+ * @property {string} [height] The page height using CSS units.
+ * @property {string} [width] The page width using CSS units.
+ */
 
 //-----------------------------------------------------------------------------
 // Data
@@ -31,7 +43,10 @@ const pagedJSUrl = pathToFileURL(
 // Helpers
 //-----------------------------------------------------------------------------
 
-
+/**
+ * Creates a Puppeteer options object.
+ * @returns {PuppeteerLaunchOptions} A Puppeteer options object.
+ */
 function createPuppeteerOptions() {
     return {
         headless: true,
@@ -46,8 +61,9 @@ function createPuppeteerOptions() {
 
 /**
  * Creates the options object for rendering PDFs in Puppeteer.
- * @param {*} options 
- * @returns {object} An object containing the PDF options.
+ * @param {PDFOptions} options The PDF options.
+ * @returns {PuppeteerPDFOptions} An object containing the
+ *      PDF options.
  */
 function createPdfOptions(options = {}) {
     return {
@@ -61,46 +77,9 @@ function createPdfOptions(options = {}) {
             top: 0,
             right: 0,
             bottom: 0,
-            left: 0,
+            left: 0
         }
     };
-}
-
-/**
- * Extracts page meta information.
- * @param {puppeteer.Page} page The page to extract from. 
- * @returns {Object} Meta information about the page.
- */
-function extractMeta(page) {
-    return page.evaluate(() => {
-        const meta = {
-            title: document.title,
-            lang: document.querySelector("html").lang
-        };
-
-        let metaTags = document.querySelectorAll("meta");
-        for (const metaTag of metaTags) {
-            if (metaTag.name) {
-                meta[metaTag.name] = metaTag.content;
-            }
-        }
-
-        // normalize keywords into an array
-        if (typeof meta.keywords === "string") {
-            meta.keywords = meta.keywords.split(/\s*,\s*/g);
-        } else {
-            meta.keywords = [];
-        }
-
-        // add dates
-        const now = new Date().toISOString();
-        meta.creationDate = now;
-        meta.modDate = now;
-        meta.metadataDate = now;
-
-
-        return meta;
-    });
 }
 
 //-----------------------------------------------------------------------------
@@ -120,12 +99,6 @@ export class Printer extends EventEmitter {
          * @type {string}
          */
         this.cwd = cwd;
-
-        /**
-         * The Puppeteer instance to use.
-         * @type {import("puppeteer").Browser}
-         */
-        this.browser = undefined;
     }
 
     get supportedEvents() {
@@ -143,9 +116,10 @@ export class Printer extends EventEmitter {
     }
 
     /**
-     * 
-     * @param {*} filePath 
-     * @returns 
+     * Converts the given file into a PDF.
+     * @param {string} filePath A relative or absolute file path to a file
+     *      that should be converted to a PDF. 
+     * @returns {Promise<Buffer>} The PDF blob.
      */
     async printFileToPdf(filePath) {
         const fullFilePath = path.resolve(this.cwd, filePath);
@@ -155,8 +129,9 @@ export class Printer extends EventEmitter {
     }
 
     /**
-     * 
-     * @param {string} url  
+     * Converts the given file into a PDF.
+     * @param {string} url The URL to convert into a PDF. 
+     * @returns {Promise<Buffer>} The PDF blob.
      */
     async printUrlToPdf(url) {
 
@@ -180,6 +155,11 @@ export class Printer extends EventEmitter {
         });
         await page.addScriptTag({ url: pagedJSUrl });
 
+        /*
+         * Add handlers to the page in order to trigger events.
+         * Without this, the operation is completely opaque and
+         * difficult to debug.
+         */
         await page.exposeFunction("onSize", size => {
             this.emit("size", { size });
         });
@@ -195,8 +175,14 @@ export class Printer extends EventEmitter {
             });
         });
 
-        this.emit("renderstart");
+        /*
+        * Starts rendering by configuring PagedJS and triggering
+        * the "preview", which actually renders the page correctly
+        * so in the next step it can be converted to a PDF.
+        */
 
+        this.emit("renderstart");
+        
         await page.evaluate(async () => {
             let done;
             window.PagedPolyfill.on("page", (page) => {

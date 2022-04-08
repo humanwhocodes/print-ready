@@ -5,14 +5,24 @@
 
 export default [
     {
-        input: "src/data-extractor.js",
+        input: "src/print-ready.js",
         output: [
             {
-                file: "dist/data-extractor.cjs",
+                file: "dist/print-ready.cjs",
                 format: "cjs"
             },
             {
-                file: "dist/data-extractor.js",
+                file: "dist/print-ready.js",
+                format: "esm"
+            }
+        ]
+    },
+    {
+        input: "src/cli.js",
+        output: [
+            {
+                banner: "#!/usr/bin/env node\n",
+                file: "dist/cli.js",
                 format: "esm"
             }
         ]

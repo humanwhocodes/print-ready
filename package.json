@@ -6,6 +6,9 @@
   "main": "dist/print-ready.cjs",
   "module": "dist/print-ready.js",
   "types": "dist/print-ready.d.ts",
+  "bin": {
+    "print-ready": "dist/cli.js"
+  },
   "exports": {
     "require": "./dist/print-ready.cjs",
     "import": "./dist/print-ready.js"
@@ -32,7 +35,7 @@
     "build": "rollup -c && tsc",
     "prepare": "npm run build",
     "lint": "eslint src/ tests/",
-    "lint:fix": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
     "pretest": "npm run build",
     "test": "mocha tests/print-ready.test.js --timeout 5000"
   },
@@ -60,6 +63,6 @@
   },
   "dependencies": {
     "pagedjs": "^0.2.0",
-    "pdf-lib": "^1.17.1"
+    "yargs": "^16.2.0"
   }
 }

@@ -1,6 +1,6 @@
 {
     "include": [
-        "dist/data-extractor.js"
+        "dist/print-ready.js"
     ],
     "compilerOptions": {
         "declaration": true,

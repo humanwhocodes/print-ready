@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * @fileoverview The execute CLI application
  * @author Nicholas C. Zakas
@@ -11,12 +9,13 @@
 
 import { Printer } from "./print-ready.js";
 import fs from "node:fs/promises";
+import yargs from "yargs";
+import path from "node:path";
 
 //-----------------------------------------------------------------------------
 // Data
 //-----------------------------------------------------------------------------
 
-let debug = false;
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -33,6 +32,38 @@ function setupDebugMessages(printer) {
     }
 }
 
+const argv = yargs(process.argv.slice(2))
+    .scriptName("print-ready")
+
+// disable automatic console output
+// .help(false)
+// .version(false)
+
+    // options for the command line
+    .options({
+        o: {
+            type: "string",
+            describe: "The output filename."
+        },
+        debug: {
+            type: "boolean",
+            describe: "Turn on debugging messages."
+        },
+        help: {
+            alias: "h",
+            type: "boolean",
+            describe: "Show the help screen."
+        },
+        version: {
+            alias: "v",
+            type: "boolean",
+            describe: "Shows the current version."
+        }
+    })
+    .usage("$0 [options] filename")
+    .argv;
+
+
 //-----------------------------------------------------------------------------
 // Main
 //-----------------------------------------------------------------------------
@@ -40,10 +71,21 @@ function setupDebugMessages(printer) {
 (async() => {
     const printer = new Printer();
 
-    if (debug) {
+    if (argv.debug) {
         setupDebugMessages(printer);
     }
 
-    const pdf = await printer.printFileToPdf("../../writing/understanding-javascript-promises/print/book.html");
-    await fs.writeFile("book.pdf", pdf);
+    if (!argv._.length) {
+        argv.showHelp();
+        process.exit(1);
+    }
+
+    // figure out where everything goes
+    const filePath = argv._[0];
+    const outputFilePath = argv.o
+        ? argv.o :
+        `${path.basename(filePath, path.extname(filePath))}.pdf`;
+
+    const pdf = await printer.printFileToPdf(filePath);
+    await fs.writeFile(outputFilePath, pdf);
 })();
