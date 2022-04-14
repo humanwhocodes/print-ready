@@ -85,10 +85,10 @@ function createPdfOptions(options = {}) {
 }
 
 /**
- * 
+ * Extracts meta information from the page and places it into the PDF.
  * @param {PuppeteerPage} page The page to pull data from.
  * @param {PDFDocument} pdf The PDF document to add meta data to.
- * @returns {void}
+ * @returns {Promise<void>}
  */
 async function setPdfMeta(page, pdf) {
     const meta = await page.evaluate(() => {
@@ -121,12 +121,13 @@ async function setPdfMeta(page, pdf) {
     }
 
     if (meta.keywords) {
-        pdf.setAuthor(meta.keywords.split(/\s*,\s*/g));
+        pdf.setKeywords(meta.keywords.split(/\s*,\s*/g));
     }
 
+    pdf.setCreator("PrintReady");
+    pdf.setProducer("PrintReady");
     pdf.setCreationDate(new Date());
     pdf.setModificationDate(new Date());
-
 }
 
 //-----------------------------------------------------------------------------

@@ -37,7 +37,7 @@
     "lint": "eslint src/ tests/",
     "lint:fix": "eslint src/ tests/ --fix",
     "pretest": "npm run build",
-    "test": "mocha tests/print-ready.test.js --timeout 5000"
+    "test": "mocha tests/"
   },
   "repository": {
     "type": "git",
@@ -56,6 +56,7 @@
     "eslint": "^7.32.0",
     "lint-staged": "^10.4.0",
     "mocha": "^9.0.3",
+    "pdfjs-dist": "^2.13.216",
     "puppeteer": "^10.2.0",
     "rollup": "^1.20.3",
     "typescript": "^4.0.3",
