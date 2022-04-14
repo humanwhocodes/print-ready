@@ -3,7 +3,7 @@
  * @author Nicholas C. Zakas
  */
 
-/*global window, CSS*/
+/*global window, document, CSS*/
 
 //-----------------------------------------------------------------------------
 // Imports
@@ -14,6 +14,7 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import EventEmitter from "node:events";
+import { PDFDocument } from "pdf-lib";
 
 //-----------------------------------------------------------------------------
 // Types
@@ -21,6 +22,7 @@ import EventEmitter from "node:events";
 
 /** @typedef {import("puppeteer").PDFOptions} PuppeteerPDFOptions */
 /** @typedef {import("puppeteer").LaunchOptions} PuppeteerLaunchOptions */
+/** @typedef {import("puppeteer").Page} PuppeteerPage */
 /**
  * @typedef {Object} PDFOptions
  * @property {"portrait"|"landscape"} [orientation] The page orientation.
@@ -80,6 +82,51 @@ function createPdfOptions(options = {}) {
             left: 0
         }
     };
+}
+
+/**
+ * 
+ * @param {PuppeteerPage} page The page to pull data from.
+ * @param {PDFDocument} pdf The PDF document to add meta data to.
+ * @returns {void}
+ */
+async function setPdfMeta(page, pdf) {
+    const meta = await page.evaluate(() => {
+        const result = {
+            title: document.title.trim(),
+            lang: document.querySelector("html").getAttribute("lang")
+        };
+
+        const tags = document.querySelectorAll("meta");
+        for (const tag of tags) {
+            if (tag.name) {
+                result[tag.name.toLowerCase()] = tag.content;
+            }
+        }
+
+        return result;
+    });
+
+
+    if (meta.title) {
+        pdf.setTitle(meta.title);
+    }
+
+    if (meta.lang) {
+        pdf.setLanguage(meta.lang);
+    }
+
+    if (meta.author) {
+        pdf.setAuthor(meta.author);
+    }
+
+    if (meta.keywords) {
+        pdf.setAuthor(meta.keywords.split(/\s*,\s*/g));
+    }
+
+    pdf.setCreationDate(new Date());
+    pdf.setModificationDate(new Date());
+
 }
 
 //-----------------------------------------------------------------------------
@@ -248,11 +295,14 @@ export class Printer extends EventEmitter {
         const blob = await page.pdf(createPdfOptions());
         this.emit("pdfend", { url });
 
+        const pdf = await PDFDocument.load(blob);
+        await setPdfMeta(page, pdf);
+
         // cleanup
         await page.close();
         await browser.close();
 
-        return blob;
+        return pdf.save();
     }
 
 }
