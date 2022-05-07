@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "puppeteer": "^13.0.0",
-    "pagedjs": "^0.2.0",
+    "pagedjs": "^0.3.0",
     "pdf-lib": "^1.17.1",
     "yargs": "^16.2.0"
   }
