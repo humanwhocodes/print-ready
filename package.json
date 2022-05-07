@@ -37,7 +37,7 @@
     "lint": "eslint src/ tests/",
     "lint:fix": "eslint src/ tests/ --fix",
     "pretest": "npm run build",
-    "test": "mocha tests/ --timeout 5000"
+    "test": "mocha tests/ --timeout 10000"
   },
   "repository": {
     "type": "git",
