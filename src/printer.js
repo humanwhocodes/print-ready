@@ -11,6 +11,7 @@
 
 import puppeteer from "puppeteer";
 import path from "node:path";
+import fs from "fs/promises";
 import { createRequire } from "node:module";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import EventEmitter from "node:events";
@@ -84,6 +85,28 @@ function createPdfOptions(options = {}) {
             left: 0
         }
     };
+}
+
+/**
+ * PagedJS has a bug when rendering preformatted code across page
+ * boundaries. This patches the polyfill so that it works correctly.
+ * @returns {void}
+ * @see https://github.com/pagedjs/pagedjs/issues/75
+ */
+async function patchPagedJS() {
+
+    const CODE_TO_REPLACE = "const significantWhitespaces = node.parentElement && node.parentElement.nodeName === \"PRE\";";
+    const REPLACEMENT_CODE = "const significantWhitespaces = node.parentElement && getComputedStyle(node.parentElement).whiteSpace === \"pre\";";
+    const code = await fs.readFile(pagedJSFilePath, "utf8");
+
+    if (code.includes(CODE_TO_REPLACE)) {
+        await fs.writeFile(
+            pagedJSFilePath,
+            code.replace(CODE_TO_REPLACE, REPLACEMENT_CODE),
+            "utf8"
+        );
+    }
+
 }
 
 /**
@@ -184,6 +207,8 @@ export class Printer extends EventEmitter {
      * @returns {Promise<Buffer>} The PDF blob.
      */
     async printUrlToPdf(url) {
+
+        patchPagedJS();
 
         const browser = await puppeteer.launch(
             createPuppeteerOptions()
