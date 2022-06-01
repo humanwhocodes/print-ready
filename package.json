@@ -57,7 +57,7 @@
     "lint-staged": "10.5.4",
     "mocha": "9.2.2",
     "pdfjs-dist": "2.13.216",
-    "rollup": "1.32.1",
+    "rollup": "2.75.5",
     "typescript": "4.7.2",
     "yorkie": "2.0.0"
   },
