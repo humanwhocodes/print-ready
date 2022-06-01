@@ -37,9 +37,11 @@ import { PDFDocument } from "pdf-lib";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const require = createRequire(__dirname);
-const pagedJSUrl = pathToFileURL(
-    require.resolve("pagedjs/dist/paged.polyfill.js")
+const pagedJSFilePath = path.resolve(
+    require.resolve("pagedjs"),
+    "../../dist/paged.polyfill.js"
 );
+const pagedJSUrl = pathToFileURL(pagedJSFilePath);
 
 //-----------------------------------------------------------------------------
 // Helpers
