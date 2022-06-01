@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.2.1](https://www.github.com/humanwhocodes/print-ready/compare/v0.2.0...v0.2.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* Preformatted code across page boundaries ([d784ab3](https://www.github.com/humanwhocodes/print-ready/commit/d784ab3365ae4cfdb95991dd66a6533b53e74ab5))
+
 ## [0.2.0](https://www.github.com/humanwhocodes/print-ready/compare/v0.1.0...v0.2.0) (2022-04-14)
 
 
