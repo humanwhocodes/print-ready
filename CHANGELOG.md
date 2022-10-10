@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.2.2](https://www.github.com/humanwhocodes/print-ready/compare/v0.2.1...v0.2.2) (2022-10-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency yargs to v17 ([#23](https://www.github.com/humanwhocodes/print-ready/issues/23)) ([dad7f8a](https://www.github.com/humanwhocodes/print-ready/commit/dad7f8ac199f0268b6648849362234f4972371db))
+* Missing lines of text by upgrading pagedjs ([91cb37c](https://www.github.com/humanwhocodes/print-ready/commit/91cb37cc26d36e0cf91211fce2a09ec078fdc0c7))
+
 ### [0.2.1](https://www.github.com/humanwhocodes/print-ready/compare/v0.2.0...v0.2.1) (2022-06-01)
 
 
