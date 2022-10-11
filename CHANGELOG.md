@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.2.3](https://www.github.com/humanwhocodes/print-ready/compare/v0.2.2...v0.2.3) (2022-10-11)
+
+
+### Bug Fixes
+
+* Remove yargs warning ([38b3d50](https://www.github.com/humanwhocodes/print-ready/commit/38b3d5066918a252089b523e1ee75f6235d1eccd))
+
 ### [0.2.2](https://www.github.com/humanwhocodes/print-ready/compare/v0.2.1...v0.2.2) (2022-10-10)
 
 
