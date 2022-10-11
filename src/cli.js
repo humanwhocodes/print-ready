@@ -34,6 +34,7 @@ function setupDebugMessages(printer) {
 
 const argv = yargs(process.argv.slice(2))
     .scriptName("print-ready")
+    .version(false)
     .options({
         o: {
             type: "string",
