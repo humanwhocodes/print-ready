@@ -1,6 +1,6 @@
 {
   "name": "@humanwhocodes/print-ready",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Convert HTML to PDF",
   "type": "module",
   "main": "dist/print-ready.cjs",
