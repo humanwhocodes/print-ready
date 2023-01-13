@@ -71,7 +71,7 @@ function createPuppeteerOptions() {
  *      PDF options.
  */
 function createPdfOptions(options = {}) {
-    return {
+    const pdfOptions = {
         printBackground: true,
         displayHeaderFooter: false,
         preferCSSPageSize: options.width ? false : true,
@@ -85,6 +85,12 @@ function createPdfOptions(options = {}) {
             left: 0
         }
     };
+
+    if (typeof options.timeout === "number") {
+        pdfOptions.timeout = options.timeout;
+    }
+
+    return pdfOptions;
 }
 
 /**
@@ -162,7 +168,8 @@ async function setPdfMeta(page, pdf) {
 export class Printer extends EventEmitter {
     
     constructor({
-        cwd = process.cwd()
+        cwd = process.cwd(),
+        timeout
     } = {}) {
 
         super();
@@ -172,6 +179,12 @@ export class Printer extends EventEmitter {
          * @type {string}
          */
         this.cwd = cwd;
+
+        /**
+         * The timeout for the printer rendering.
+         * @type {number|undefined}
+         */
+        this.timeout = timeout;
     }
 
     get supportedEvents() {
@@ -320,7 +333,9 @@ export class Printer extends EventEmitter {
 
         // generate the PDF
         this.emit("pdfstart", { url });
-        const blob = await page.pdf(createPdfOptions());
+        const blob = await page.pdf(createPdfOptions({
+            timeout: this.timeout
+        }));
         this.emit("pdfend", { url });
 
         const pdf = await PDFDocument.load(blob);
