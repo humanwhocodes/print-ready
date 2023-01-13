@@ -29,6 +29,22 @@ const FIXTURES_DIR = path.resolve(__dirname, "fixtures");
 
 describe("Printer", () => {
 
+    describe("new Printer()", () => {
+        it("should have default cwd", () => {
+            const printer = new Printer();
+            expect(printer.cwd).to.equal(process.cwd());
+        });
+
+        it("should save cwd", () => {
+            const printer = new Printer({ cwd: "foo" });
+            expect(printer.cwd).to.equal("foo");
+        });
+
+        it("should save timeout", () => {
+            const printer = new Printer({ timeout: 500 });
+            expect(printer.timeout).to.equal(500);
+        });
+    });
 
     describe("printFileToPdf()", () => {
         
@@ -71,7 +87,24 @@ describe("Printer", () => {
 
         });
 
+        describe("setting timeout", () => {
 
+            const filePath = path.resolve(FIXTURES_DIR, "one-page.html");
+
+            it("should throw a timeout error", () => {
+
+                const printer = new Printer({ timeout: 1 });
+
+                return printer.printFileToPdf(filePath)
+                    .then(() => {
+                        expect.fail("Promise should be rejected");
+                    })
+                    .catch(error => {
+                        expect(error.message).to.match(/timeout 1ms exceeded/);
+                    });
+            });
+
+        });
 
     });
 });

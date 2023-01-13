@@ -32,7 +32,7 @@ function setupDebugMessages(printer) {
     }
 }
 
-const argv = yargs(process.argv.slice(2))
+const cargv = yargs(process.argv.slice(2))
     .scriptName("print-ready")
     .version(false)
     .options({
@@ -44,10 +44,9 @@ const argv = yargs(process.argv.slice(2))
             type: "boolean",
             describe: "Turn on debugging messages."
         },
-        help: {
-            alias: "h",
-            type: "boolean",
-            describe: "Show the help screen."
+        timeout: {
+            type: "number",
+            describe: "Set the rendering timeout in milliseconds."
         },
         version: {
             alias: "v",
@@ -56,21 +55,22 @@ const argv = yargs(process.argv.slice(2))
         }
     })
     .usage("$0 [options] filename")
-    .argv;
+    .help();
 
 //-----------------------------------------------------------------------------
 // Main
 //-----------------------------------------------------------------------------
 
 (async() => {
-    const printer = new Printer();
+    const argv = cargv.argv;
+    const printer = new Printer({ timeout: argv.timeout });
 
     if (argv.debug) {
         setupDebugMessages(printer);
     }
 
     if (!argv._.length) {
-        argv.showHelp();
+        cargv.showHelp();
         process.exit(1);
     }
 
