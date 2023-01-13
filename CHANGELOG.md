@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/humanwhocodes/print-ready/compare/v0.2.3...v0.3.0) (2023-01-13)
+
+
+### Features
+
+* Add timeout flag ([#46](https://github.com/humanwhocodes/print-ready/issues/46)) ([c5a114e](https://github.com/humanwhocodes/print-ready/commit/c5a114ed6cd1855f35d3541256944fb53b122ba5))
+
+
+### Bug Fixes
+
+* **deps:** update dependency puppeteer to v19 ([#37](https://github.com/humanwhocodes/print-ready/issues/37)) ([3ddf36c](https://github.com/humanwhocodes/print-ready/commit/3ddf36c0e8158fc68bec0fc186ad73909e1889a3))
+
 ## [0.2.3](https://github.com/humanwhocodes/print-ready/compare/v0.2.2...v0.2.3) (2022-10-11)
 
 
