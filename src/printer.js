@@ -333,9 +333,18 @@ export class Printer extends EventEmitter {
 
         // generate the PDF
         this.emit("pdfstart", { url });
-        const blob = await page.pdf(createPdfOptions({
-            timeout: this.timeout
-        }));
+        let blob;
+
+        try {
+            blob = await page.pdf(createPdfOptions({
+                timeout: this.timeout
+            }));
+        } catch (error) {
+            await page.close();
+            await browser.close();
+            throw error;
+        }
+
         this.emit("pdfend", { url });
 
         const pdf = await PDFDocument.load(blob);
