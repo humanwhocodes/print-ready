@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.1](https://github.com/humanwhocodes/print-ready/compare/v0.3.0...v0.3.1) (2023-03-24)
+
+
+### Bug Fixes
+
+* **deps:** Beta version of PagedJS to fix rendering issues ([57258ef](https://github.com/humanwhocodes/print-ready/commit/57258ef630c0276d14bf51dc3bbbda42f9c8de3f))
+* **deps:** update dependency pagedjs to ^0.4.0 ([#42](https://github.com/humanwhocodes/print-ready/issues/42)) ([f53937e](https://github.com/humanwhocodes/print-ready/commit/f53937e2b23018de728a049da0b03fe390a2a721))
+* **deps:** update dependency puppeteer to v19.7.5 ([#47](https://github.com/humanwhocodes/print-ready/issues/47)) ([1dd7336](https://github.com/humanwhocodes/print-ready/commit/1dd73361ebc8649960de5586718c39f99db65ce6))
+* **deps:** update dependency yargs to v17.7.1 ([#48](https://github.com/humanwhocodes/print-ready/issues/48)) ([76d8c87](https://github.com/humanwhocodes/print-ready/commit/76d8c875d5e05fd90bf05a941c75146cf61a8001))
+
 ## [0.3.0](https://github.com/humanwhocodes/print-ready/compare/v0.2.3...v0.3.0) (2023-01-13)
 
 
