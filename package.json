@@ -62,7 +62,7 @@
     "yorkie": "2.0.0"
   },
   "dependencies": {
-    "pagedjs": "^0.3.5",
+    "pagedjs": "^0.4.0",
     "pdf-lib": "^1.17.1",
     "puppeteer": "^19.0.0",
     "yargs": "^17.0.0"
