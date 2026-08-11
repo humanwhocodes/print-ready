@@ -103,14 +103,28 @@ async function patchPagedJS() {
 
     const CODE_TO_REPLACE = "const significantWhitespaces = node.parentElement && node.parentElement.nodeName === \"PRE\";";
     const REPLACEMENT_CODE = "const significantWhitespaces = node.parentElement && getComputedStyle(node.parentElement).whiteSpace === \"pre\";";
-    const code = await fs.readFile(pagedJSFilePath, "utf8");
 
-    if (code.includes(CODE_TO_REPLACE)) {
-        await fs.writeFile(
-            pagedJSFilePath,
-            code.replace(CODE_TO_REPLACE, REPLACEMENT_CODE),
-            "utf8"
-        );
+    try {
+
+        const code = await fs.readFile(pagedJSFilePath, "utf8");
+
+        if (code.includes(CODE_TO_REPLACE)) {
+            await fs.writeFile(
+                pagedJSFilePath,
+                code.replace(CODE_TO_REPLACE, REPLACEMENT_CODE),
+                "utf8"
+            );
+        }
+
+    } catch (error) {
+
+        /*
+         * The patch is a workaround for a PagedJS bug that only affects
+         * whitespace inside preformatted text. An installation that can't be
+         * written to (a global install, a read-only container, a pnpm store)
+         * is therefore not a reason to fail the whole render.
+         */
+        console.warn(`PrintReady: couldn't patch PagedJS (${error.code || error.message}). Whitespace inside <pre> elements may render incorrectly across page breaks.`);
     }
 
 }
@@ -221,7 +235,7 @@ export class Printer extends EventEmitter {
      */
     async printUrlToPdf(url) {
 
-        patchPagedJS();
+        await patchPagedJS();
 
         const browser = await puppeteer.launch(
             createPuppeteerOptions()
